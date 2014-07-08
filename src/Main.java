@@ -26,7 +26,7 @@ public class Main {
 			OccurrenceCalculator occurrenceCalculator = new OccurrenceCalculator(
 					fileReader);
 			occurrenceCalculator.populateOccurrenceMap();
-			occurrenceCalculator.outputOccurrenceMap();
+			occurrenceCalculator.sortAndOutputOccurrenceMap();
 		} catch (IOException ioe) {
 			System.out.println("File not found");
 			System.exit(1);

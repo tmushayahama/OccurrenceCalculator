@@ -14,45 +14,60 @@ import java.util.TreeMap;
  */
 public class OccurrenceCalculator {
 	/**
-	 *  A comparator class to help sort the values of the occurrence map. It sorts
-	 *  by overriding the the compare function to sort by comparing the values of the map.
-	 *
+	 * A comparator class to help sort the values of the occurrence map. It
+	 * sorts by overriding the the compare function to sort by comparing the
+	 * values of the map.
+	 * 
 	 */
 	static class OccurrenceComparator implements Comparator<String> {
 
-        Map<String, Integer> occurrenceMapBase;
+		Map<String, Integer> occurrenceMapBase;
 
-        OccurrenceComparator(Map<String, Integer> occurrenceMapBase) {
-            this.occurrenceMapBase = occurrenceMapBase;
-        }
-        /**
-         * Compares the values of a map. If the values are equal, it then compares the keys
-         * For descending order, a quick approach was to multiply by -1. Needs some improvement
-         * 
-         *  @param a the first value to be compared
-         *  @param b the second value to be compared
-         */
-        @Override
-        public int compare(String a, String b) {
-        	
-        	Integer firstInt = this.occurrenceMapBase.get(a);
-        	Integer secondInt = this.occurrenceMapBase.get(b);
-        	 if (firstInt.equals(secondInt)) {
-                 return a.compareTo(b)*-1;
-             }
-        	 return firstInt.compareTo(secondInt)*-1;
-        }
-    }
+		OccurrenceComparator(Map<String, Integer> occurrenceMapBase) {
+			this.occurrenceMapBase = occurrenceMapBase;
+		}
+
+		/**
+		 * Compares the values of a map. If the values are equal, it then
+		 * compares the keys For descending order, a quick approach was to
+		 * multiply by -1. Needs some improvement
+		 * 
+		 * @param a
+		 *            the first value to be compared
+		 * @param b
+		 *            the second value to be compared
+		 */
+		@Override
+		public int compare(String a, String b) {
+
+			Integer firstInt = this.occurrenceMapBase.get(a);
+			Integer secondInt = this.occurrenceMapBase.get(b);
+			if (firstInt.equals(secondInt)) {
+				return a.compareTo(b) * -1;
+			}
+			return firstInt.compareTo(secondInt) * -1;
+		}
+	}
+
 	/**
 	 * The reader associated with the input text file.
 	 */
 	BufferedReader reader;
 	/**
-	 * The storage of occurrence of strings
+	 * The map where the occurrences of strings are populated in.
 	 */
 	Map<String, Integer> occurrenceMap;
-     OccurrenceComparator occurrenceComparator;
-     Map<String, Integer> sortedOccurrenceMap;
+
+	/**
+	 * Sort the values of the map in a descending order
+	 */
+	OccurrenceComparator occurrenceComparator;
+
+	/**
+	 * A sorted map for outputting the occurrence map
+	 */
+	Map<String, Integer> sortedOccurrenceMap;
+
 	/**
 	 * Constructor assigns the reader
 	 * 
@@ -63,12 +78,30 @@ public class OccurrenceCalculator {
 		this.reader = reader;
 		this.occurrenceMap = new HashMap<String, Integer>();
 		this.occurrenceComparator = new OccurrenceComparator(occurrenceMap);
-		this.sortedOccurrenceMap = new TreeMap<String, Integer>(this.occurrenceComparator);
+		this.sortedOccurrenceMap = new TreeMap<String, Integer>(
+				this.occurrenceComparator);
 	}
 
 	/**
-	 *  Populates the occurrenceMap by reading string per line and putting it to the map
-	 * @throws IOException 
+	 * Adds a string key to the map. If a string key is new in the map, it will
+	 * have an occurrence of 1 else it will increment it by one
+	 * 
+	 * @param line
+	 *            the string being added to the map
+	 */
+	private void addToOccurrenceMap(String line) {
+		if (this.occurrenceMap.containsKey(line)) {
+			this.occurrenceMap.put(line, this.occurrenceMap.get(line) + 1);
+		} else {
+			this.occurrenceMap.put(line, 1);
+		}
+	}
+
+	/**
+	 * Populates the occurrenceMap by reading string per line and putting it to
+	 * the map
+	 * 
+	 * @throws IOException if the reader doesn't close
 	 */
 	public void populateOccurrenceMap() throws IOException {
 		String line;
@@ -80,30 +113,17 @@ public class OccurrenceCalculator {
 			System.out.println("Error reading the file");
 			System.exit(1);
 		} finally {
-            reader.close();
+			reader.close();
 		}
 	}
 
 	/**
-	 *  Adds a string key to the map. If a string key is new in the map, it will have an occurrence of
-	 *  1 else it will increment it by one
-	 * @param line the string being added to the map
+	 * Sorts and outputs the map in descending order
 	 */
-	private void addToOccurrenceMap(String line) {
-		if (this.occurrenceMap.containsKey(line)) {
-			this.occurrenceMap.put(line, this.occurrenceMap.get(line)+1);
-		} else {
-			this.occurrenceMap.put(line, 1);
-		}
-	}
-	/**
-	 * Outputs the map 
-	 * Checking before sorting
-	 */
-	public void outputOccurrenceMap() {
+	public void sortAndOutputOccurrenceMap() {
 		this.sortedOccurrenceMap.putAll(this.occurrenceMap);
-		for(String key: this.sortedOccurrenceMap.keySet())
-			System.out.println(key+": "+this.sortedOccurrenceMap.get(key));
+		for (String key : this.sortedOccurrenceMap.keySet())
+			System.out.println(key + ": " + this.sortedOccurrenceMap.get(key));
 	}
 
 }
